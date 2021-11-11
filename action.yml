@@ -1,0 +1,13 @@
+name: 'Staging Deploy'
+description: 'Staging Deploy'
+inputs:
+  pr-number:  # id of input
+    description: 'PR Number'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - run:  ${{ inputs.pr-number }}.
+      shell: bash
+    - run: ${{ github.action_path }}/staging-deploy.sh
+      shell: bash
