@@ -1,4 +1,6 @@
-sudo snap install yq
+#!/bin/bash
+set -x
+#sudo snap install yq
 echo $PR_NUMBER
 export FULL_PR_NUMBER="pr-$PR_NUMBER"
 yq eval -i '.app.versions += [env(FULL_PR_NUMBER)'] superhero-ui/values-staging.yaml
