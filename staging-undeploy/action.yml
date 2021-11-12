@@ -1,0 +1,20 @@
+name: Staging Deploy
+description: "Staging Deploy"
+inputs:
+  pr-number:
+    description: "PR Number"
+    required: true
+  env:
+    description: "Environment"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - id: deploy
+      run: |
+        sudo snap install yq
+        export FULL_PR_NUMBER="pr-$PR_NUMBER"
+        yq eval -i 'del( .app.versions[] | select(. == env(FULL_PR_NUMBER))  )' superhero-ui/values-staging.yaml
+        yq eval -i 'del(... | select(.[] == "'${FULL_PR_NUMBER}.${{ inputs.env }}.aepps.com'"))' superhero-ui/values-staging.yaml
+        cat superhero-ui/values-staging.yaml
+      shell: bash
