@@ -16,8 +16,8 @@ runs:
     - id: deploy
       run: |
         sudo snap install yq
-        export FULL_PR_NUMBER="pr-$PR_NUMBER"
-        yq eval -i 'del( .app.versions[] | select(. == env(FULL_PR_NUMBER))  )' superhero-ui/${{ inputs.argocd-file }}
-        yq eval -i 'del(... | select(.[] == "'${FULL_PR_NUMBER}.${{ inputs.env }}.aepps.com'"))' superhero-ui/${{ inputs.argocd-file }}
+        export URL_PREFIX=${{ inputs.url-prefix }}
+        yq eval -i 'del( .app.versions[] | select(. == env(URL_PREFIX))  )' superhero-ui/${{ inputs.argocd-file }}
+        yq eval -i 'del(... | select(.[] == "'${URL_PREFIX}.${{ inputs.env }}.aepps.com'"))' superhero-ui/${{ inputs.argocd-file }}
         cat superhero-ui/${{ inputs.argocd-file }}
       shell: bash
