@@ -7,6 +7,9 @@ inputs:
   env:
     description: "Environment"
     required: true
+  argocd-file:
+    description: "Argocd values file"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -14,7 +17,7 @@ runs:
       run: |
         sudo snap install yq
         export FULL_PR_NUMBER="pr-$PR_NUMBER"
-        yq eval -i 'del( .app.versions[] | select(. == env(FULL_PR_NUMBER))  )' superhero-ui/values-staging.yaml
-        yq eval -i 'del(... | select(.[] == "'${FULL_PR_NUMBER}.${{ inputs.env }}.aepps.com'"))' superhero-ui/values-staging.yaml
-        cat superhero-ui/values-staging.yaml
+        yq eval -i 'del( .app.versions[] | select(. == env(FULL_PR_NUMBER))  )' superhero-ui/${{ inputs.argocd-file }}
+        yq eval -i 'del(... | select(.[] == "'${FULL_PR_NUMBER}.${{ inputs.env }}.aepps.com'"))' superhero-ui/${{ inputs.argocd-file }}
+        cat superhero-ui/${{ inputs.argocd-file }}
       shell: bash

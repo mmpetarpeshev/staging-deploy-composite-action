@@ -7,6 +7,9 @@ inputs:
   env:
     description: "Environment"
     required: true
+  argocd-file:
+    description: "Argocd values file"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -15,10 +18,10 @@ runs:
         sudo snap install yq
         export PR_NUMBER=${{ inputs.pr-number }}
         export FULL_PR_NUMBER="pr-$PR_NUMBER"
-        yq eval -i '.app.versions += [env(FULL_PR_NUMBER)'] superhero-ui/values-staging.yaml
-        yq eval -i '.app.ingress.hosts += [{"host": "'${FULL_PR_NUMBER}'.${{ inputs.env }}.aepps.com", "paths": { "path": "/"}}]' superhero-ui/values-staging.yaml
-        yq eval -i '.. style="double"' superhero-ui/values-staging.yaml
-        cat superhero-ui/values-staging.yaml
+        yq eval -i '.app.versions += [env(FULL_PR_NUMBER)'] superhero-ui/${{ inputs.argocd-file }}
+        yq eval -i '.app.ingress.hosts += [{"host": "'${FULL_PR_NUMBER}'.${{ inputs.env }}.aepps.com", "paths": { "path": "/"}}]' superhero-ui/${{ inputs.argocd-file }}
+        yq eval -i '.. style="double"' superhero-ui/${{ inputs.argocd-file }}
+        cat superhero-ui/${{ inputs.argocd-file }}
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add .
