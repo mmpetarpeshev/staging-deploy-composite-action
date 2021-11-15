@@ -17,7 +17,7 @@ runs:
       run: |
         sudo snap install yq
         export URL_PREFIX=${{ inputs.url-prefix }}
-        yq eval -i '.app.versions += env(URL_PREFIX)' superhero-ui/${{ inputs.argocd-file }}
+        yq eval -i '.app.versions += [env(URL_PREFIX)'] superhero-ui/${{ inputs.argocd-file }}
         if [ ${{ inputs.env }}  != "stg" ]; then 
             :
         else
