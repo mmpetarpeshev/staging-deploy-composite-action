@@ -14,14 +14,14 @@ runs:
       run: |
         sudo snap install yq
         export URL_PREFIX=${{ inputs.url-prefix }}
-        yq eval -i '.app.versions += [env(URL_PREFIX)'] superhero-ui/values-${{ inputs.env }}
+        yq eval -i '.app.versions += [env(URL_PREFIX)'] superhero-ui/values-${{ inputs.env }}.yaml
         if [ ${{ inputs.env }}  != "prd" ]; then 
-            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "path": "/"}}]' superhero-ui/values-${{ inputs.env }}
-            yq eval -i '.. style="double"' superhero-ui/values-${{ inputs.env }}
+            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "path": "/"}}]' superhero-ui/values-${{ inputs.env }}.yaml
+            yq eval -i '.. style="double"' superhero-ui/values-${{ inputs.env }}.yaml
         else
             :
         fi
-        cat superhero-ui/values-${{ inputs.env }}
+        cat superhero-ui/values-${{ inputs.env }}.yaml
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add .

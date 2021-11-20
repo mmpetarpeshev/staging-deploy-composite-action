@@ -14,7 +14,7 @@ runs:
       run: |
         sudo snap install yq
         export URL_PREFIX=${{ inputs.url-prefix }}
-        yq eval -i 'del( .app.versions[] | select(. == env(URL_PREFIX))  )' superhero-ui/values-${{ inputs.env }}
-        yq eval -i 'del(... | select(.[] == "'${URL_PREFIX}.${{ inputs.env }}.aepps.com'"))' superhero-ui/values-${{ inputs.env }}
-        cat superhero-ui/values-${{ inputs.env }}
+        yq eval -i 'del( .app.versions[] | select(. == env(URL_PREFIX))  )' superhero-ui/values-${{ inputs.env }}.yaml
+        yq eval -i 'del(... | select(.[] == "'${URL_PREFIX}.${{ inputs.env }}.aepps.com'"))' superhero-ui/values-${{ inputs.env }}.yaml
+        cat superhero-ui/values-${{ inputs.env }}.yaml
       shell: bash
