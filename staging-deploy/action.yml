@@ -7,6 +7,9 @@ inputs:
   env:
     description: "Environment"
     required: true
+  app:
+    description: "App"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -14,16 +17,16 @@ runs:
       run: |
         sudo snap install yq
         export URL_PREFIX=${{ inputs.url-prefix }}
-        yq eval -i '.app.versions += [env(URL_PREFIX)'] superhero-ui/values-${{ inputs.env }}.yaml
+        yq eval -i '.app.versions += [env(URL_PREFIX)'] ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         if [ ${{ inputs.env }}  != "prd" ]; then 
-            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "path": "/"}}]' superhero-ui/values-${{ inputs.env }}.yaml
-            yq eval -i '.. style="double"' superhero-ui/values-${{ inputs.env }}.yaml
+            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "path": "/"}}]' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+            yq eval -i '.. style="double"' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         else
             :
         fi
-        cat superhero-ui/values-${{ inputs.env }}.yaml
+        cat ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add .
-        git commit -m "Deploy ${URL_PREFIX}.${{ inputs.env }}.aepps.com"
+        git commit -m "Deploy pr-${URL_PREFIX}.${{ inputs.app }}.${{ inputs.env }}.aepps.com"
       shell: bash

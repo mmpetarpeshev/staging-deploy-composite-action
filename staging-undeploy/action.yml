@@ -7,6 +7,9 @@ inputs:
   env:
     description: "Environment"
     required: true
+  app:
+    description: "App"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -14,7 +17,7 @@ runs:
       run: |
         sudo snap install yq
         export URL_PREFIX=${{ inputs.url-prefix }}
-        yq eval -i 'del( .app.versions[] | select(. == env(URL_PREFIX))  )' superhero-ui/values-${{ inputs.env }}.yaml
-        yq eval -i 'del(... | select(.[] == "'${URL_PREFIX}.${{ inputs.env }}.aepps.com'"))' superhero-ui/values-${{ inputs.env }}.yaml
-        cat superhero-ui/values-${{ inputs.env }}.yaml
+        yq eval -i 'del( .app.versions[] | select(. == env(URL_PREFIX))  )' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+        yq eval -i 'del(... | select(.[] == "'${URL_PREFIX}.${{ inputs.env }}.aepps.com'"))' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+        cat ${{ inputs.app }}/values-${{ inputs.env }}.yaml
       shell: bash
