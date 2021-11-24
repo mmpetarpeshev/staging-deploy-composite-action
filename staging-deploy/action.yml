@@ -20,7 +20,7 @@ runs:
         export YAML_PATH="- path"
         yq eval -i '.app.versions += [env(URL_PREFIX)'] ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         if [ ${{ inputs.env }}  != "prd" ]; then 
-            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { '${YAML_PATH}': "/"}}]' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "${YAML_PATH}": "/"}}]' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
             yq eval -i '.. style="double"' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         else
             :
