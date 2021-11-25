@@ -21,7 +21,8 @@ runs:
         yq eval -i '.app.versions += [env(URL_PREFIX)'] ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         if [ ${{ inputs.env }}  != "prd" ]; then 
             yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "- path": "/"}}]' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
-            sed -e "s/'//g" ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+            sed -i.bak "s/'//g" ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+            rm -rf ${{ inputs.app }}/values-${{ inputs.env }}.yaml.bak
             yq eval -i '.. style="double"' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         else
             :
