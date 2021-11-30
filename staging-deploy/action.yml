@@ -17,10 +17,9 @@ runs:
       run: |
         sudo snap install yq
         export URL_PREFIX=${{ inputs.url-prefix }}
-        export YAML_PATH="- path"
         yq eval -i '.app.versions += [env(URL_PREFIX)'] ${{ inputs.app }}/values-${{ inputs.env }}.yaml
         if [ ${{ inputs.env }}  != "prd" ]; then 
-            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "- path": "/"}}]' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
+            yq eval -i '.app.ingress.hosts += [{"host": "'${URL_PREFIX}'.${{ inputs.env }}.aepps.com", "paths": { "- path": "/"}, "paths": {"  version": "${URL_PREFIX}"}}]' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
             sed -i.bak "s/'//g" ${{ inputs.app }}/values-${{ inputs.env }}.yaml
             rm -rf ${{ inputs.app }}/values-${{ inputs.env }}.yaml.bak
             yq eval -i '.. style="double"' ${{ inputs.app }}/values-${{ inputs.env }}.yaml
@@ -31,5 +30,5 @@ runs:
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add .
-        git commit -m "Deploy pr-${URL_PREFIX}.${{ inputs.app }}.${{ inputs.env }}.aepps.com"
+        git commit -m "Deploy pr-${URL_PREFIX}.${{ inputs.env }}.aepps.com"
       shell: bash
