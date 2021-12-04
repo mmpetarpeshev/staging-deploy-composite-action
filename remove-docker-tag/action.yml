@@ -1,0 +1,37 @@
+name: Remove Docker Tag
+description: "Remove Docker Tag"
+
+inputs:
+  dockerhub_user:
+    description: "dockerhub_user"
+    required: true
+  dockerhub_pass:
+    description: "dockerhub_pass"
+    required: true
+  organization:
+    description: "organization"
+    required: true
+  image:
+    description: "image"
+    required: true
+  tag:
+    description: "tag"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - id: deploy
+      run: |
+        login_data() {
+        cat <<EOF
+        {
+          "username": ${{ inputs.dockerhub_user }},
+          "password": ${{ inputs.dockerhub_pass }}
+        }
+        EOF
+        }
+        TOKEN=`curl -s -H "Content-Type: application/json" -X POST -d "$(login_data)" "https://hub.docker.com/v2/users/login/" | jq -r .token`
+        curl "https://hub.docker.com/v2/repositories/${{ inputs.organization }}/${{ inputs.image }}/tags/${{ inputs.tag }}/" \
+        -X DELETE \
+        -H "Authorization: JWT ${TOKEN}"
+      shell: bash
